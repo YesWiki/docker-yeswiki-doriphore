@@ -1,0 +1,41 @@
+version: '3'
+
+volumes:
+  app:
+
+networks:
+  local:
+    driver: bridge
+
+services:
+  web:
+      image: nginx:latest
+      ports:
+          - "8080:80"
+      volumes:
+          - app:/yeswiki
+          - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      networks:
+        - local
+
+  php:
+      build: .
+      volumes:
+      - app:/yeswiki
+      # - ./wakka.config.php:/yeswiki/wakka.config.php
+      networks:
+      - local
+
+  mysql:
+    image: mariadb:latest
+    restart: always
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
+      interval: 3s
+      timeout: 1s
+      retries: 5
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: yeswiki_dev
+    networks:
+      - local
