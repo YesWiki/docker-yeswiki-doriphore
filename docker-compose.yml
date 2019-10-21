@@ -23,6 +23,7 @@ services:
       volumes:
       - app:/yeswiki
       # - ./wakka.config.php:/yeswiki/wakka.config.php
+      - /Users/oncletom/workspace/yeswiki-extension-ebook:/yeswiki/tools/wkebook
       networks:
       - local
 
